@@ -13,26 +13,12 @@ import math
 import wpilib
 
 # Motors
-kLeftMotor1Port = 0
-kLeftMotor2Port = 1
-kRightMotor1Port = 2
-kRightMotor2Port = 3
+kLeftMotor1ID = 1
+kLeftMotor2ID = 2
+kRightMotor1ID = 3
+kRightMotor2ID = 4
 
-# Encoders
-kLeftEncoderPorts = (0, 1)
-kRightEncoderPorts = (2, 3)
-kLeftEncoderReversed = False
-kRightEncoderReversed = True
-
-kEncoderCPR = 1024
 kWheelDiameterInches = 6
-# Assumes the encoders are directly mounted on the wheel shafts
-kEncoderDistancePerPulse = (kWheelDiameterInches * math.pi) / kEncoderCPR
-
-# Hatch
-kHatchSolenoidModuleType = wpilib.PneumaticsModuleType.CTREPCM
-kHatchSolenoidModule = 0
-kHatchSolenoidPorts = (0, 1)
 
 # Autonomous
 kAutoDriveDistanceInches = 60
@@ -47,5 +33,3 @@ kDriveTrainMotorCount = 2
 kTrackWidth = 0.381 * 2
 kGearingRatio = 8
 kWheelRadius = 0.0508
-
-# kEncoderResolution = -

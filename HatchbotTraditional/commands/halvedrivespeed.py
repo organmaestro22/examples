@@ -6,7 +6,7 @@
 
 import commands2
 
-from subsystems.drivesubsystem import DriveSubsystem
+from subsystems.driveSubsystem import DriveSubsystem
 
 
 class HalveDriveSpeed(commands2.Command):

@@ -12,15 +12,11 @@ import commands2.button
 
 import constants
 
-from commands.complexauto import ComplexAuto
-from commands.drivedistance import DriveDistance
-from commands.defaultdrive import DefaultDrive
-from commands.grabhatch import GrabHatch
-from commands.halvedrivespeed import HalveDriveSpeed
-from commands.releasehatch import ReleaseHatch
 
-from subsystems.drivesubsystem import DriveSubsystem
-from subsystems.hatchsubsystem import HatchSubsystem
+from commands.defaultdrive import DefaultDrive
+from commands.halvedrivespeed import HalveDriveSpeed
+
+from subsystems.driveSubsystem import DriveSubsystem
 
 
 class RobotContainer:
@@ -38,24 +34,13 @@ class RobotContainer:
 
         # The robot's subsystems
         self.drive = DriveSubsystem()
-        self.hatch = HatchSubsystem()
-
-        # Autonomous routines
-
-        # A simple auto routine that drives forward a specified distance, and then stops.
-        self.simpleAuto = DriveDistance(
-            constants.kAutoDriveDistanceInches, constants.kAutoDriveSpeed, self.drive
-        )
-
-        # A complex auto routine that drives forward, drops a hatch, and then drives backward.
-        self.complexAuto = ComplexAuto(self.drive, self.hatch)
 
         # Chooser
         self.chooser = wpilib.SendableChooser()
 
         # Add commands to the autonomous command chooser
-        self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
-        self.chooser.addOption("Complex Auto", self.complexAuto)
+        self.chooser.setDefaultOption("Simple Auto", 'A')
+        self.chooser.addOption("Complex Auto", 'B')
 
         # Put the chooser on the dashboard
         wpilib.SmartDashboard.putData("Autonomous", self.chooser)
@@ -78,17 +63,9 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
 
-        commands2.button.JoystickButton(self.driverController, 1).onTrue(
-            GrabHatch(self.hatch)
-        )
-
-        commands2.button.JoystickButton(self.driverController, 2).onTrue(
-            ReleaseHatch(self.hatch)
-        )
-
         commands2.button.JoystickButton(self.driverController, 3).whileTrue(
             HalveDriveSpeed(self.drive)
         )
 
-    def getAutonomousCommand(self) -> commands2.Command:
+    def getAutonomousCommand(self) -> str:
         return self.chooser.getSelected()

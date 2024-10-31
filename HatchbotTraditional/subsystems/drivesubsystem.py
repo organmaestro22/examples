@@ -7,6 +7,7 @@
 import commands2
 import wpilib
 import wpilib.drive
+import phoenix5 as ctre
 
 import constants
 
@@ -15,32 +16,16 @@ class DriveSubsystem(commands2.Subsystem):
     def __init__(self) -> None:
         super().__init__()
 
-        self.left1 = wpilib.PWMVictorSPX(constants.kLeftMotor1Port)
-        self.left2 = wpilib.PWMVictorSPX(constants.kLeftMotor2Port)
-        self.right1 = wpilib.PWMVictorSPX(constants.kRightMotor1Port)
-        self.right2 = wpilib.PWMVictorSPX(constants.kRightMotor2Port)
+        self.left1 = ctre.WPI_VictorSPX(constants.kLeftMotor1ID)
+        self.left2 = ctre.WPI_VictorSPX(constants.kLeftMotor2ID)
+        self.right1 = ctre.WPI_VictorSPX(constants.kRightMotor1ID)
+        self.right2 = ctre.WPI_VictorSPX(constants.kRightMotor2ID)
 
         # The robot's drive
         self.drive = wpilib.drive.DifferentialDrive(
             wpilib.MotorControllerGroup(self.left1, self.left2),
             wpilib.MotorControllerGroup(self.right1, self.right2),
         )
-
-        # The left-side drive encoder
-        self.leftEncoder = wpilib.Encoder(
-            *constants.kLeftEncoderPorts,
-            reverseDirection=constants.kLeftEncoderReversed
-        )
-
-        # The right-side drive encoder
-        self.rightEncoder = wpilib.Encoder(
-            *constants.kRightEncoderPorts,
-            reverseDirection=constants.kRightEncoderReversed
-        )
-
-        # Sets the distance per pulse for the encoders
-        self.leftEncoder.setDistancePerPulse(constants.kEncoderDistancePerPulse)
-        self.rightEncoder.setDistancePerPulse(constants.kEncoderDistancePerPulse)
 
     def arcadeDrive(self, fwd: float, rot: float) -> None:
         """
@@ -50,13 +35,6 @@ class DriveSubsystem(commands2.Subsystem):
         :param rot: the commanded rotation
         """
         self.drive.arcadeDrive(fwd, rot)
-
-    def resetEncoders(self) -> None:
-        """Resets the drive encoders to currently read a position of 0."""
-
-    def getAverageEncoderDistance(self) -> float:
-        """Gets the average distance of the TWO encoders."""
-        return (self.leftEncoder.getDistance() + self.rightEncoder.getDistance()) / 2.0
 
     def setMaxOutput(self, maxOutput: float):
         """
