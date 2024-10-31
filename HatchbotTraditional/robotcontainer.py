@@ -63,7 +63,7 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
 
-        commands2.button.JoystickButton(self.driverController, 3).whileTrue(
+        commands2.button.JoystickButton(self.driverController, 3).toggleOnTrue(
             HalveDriveSpeed(self.drive)
         )
 
