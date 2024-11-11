@@ -25,5 +25,4 @@ class DefaultDrive(commands2.Command):
         self.addRequirements(self.drive)
 
     def execute(self) -> None:
-        #print("default")
         self.drive.arcadeDrive(self.forward(), self.rotation())

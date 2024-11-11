@@ -25,5 +25,4 @@ class CurvatureDrive(commands2.Command):
         self.addRequirements(self.drive)
 
     def execute(self) -> None:
-        print("curvature")
         self.drive.curvatureDrive(self.forward(), self.rotation())

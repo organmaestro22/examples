@@ -51,7 +51,8 @@ class MyRobot(commands2.TimedCommandRobot):
         # continue until interrupted by another command, remove
         # this line or comment it out.
         if self.autonomousCommand:
-            self.autonomousCommand.cancel()
+            print(self.autonomousCommand)
+            #self.autonomousCommand.cancel()
 
     def teleopPeriodic(self) -> None:
         """This function is called periodically during operator control"""

@@ -11,7 +11,7 @@
 
 # States
 kDefaultDriveState = True
-kDefaultSpeedState = 0
+kDefaultHalfSpeedState = 0
 kDefaultDriveInvState = 0
 
 # Motors

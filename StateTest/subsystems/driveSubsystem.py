@@ -34,6 +34,8 @@ class DriveSubsystem(commands2.Subsystem):
                 wpilib.MotorControllerGroup(self.right1, self.right2),
             )
         self.isInverted = False
+        self.isFlagged = False
+        self.flagdata = None
         self.drive.setMaxOutput(.75)
 
     def arcadeDrive(self, fwd: float, rot: float) -> None:
@@ -43,7 +45,7 @@ class DriveSubsystem(commands2.Subsystem):
         :param fwd: the commanded forward movement
         :param rot: the commanded rotation
         """
-        print(self.isInverted)
+        #print(self.isInverted)
         if self.isInverted: fwd = -fwd # invert the direction of the throttle if in inverted mode
 
         self.drive.arcadeDrive(fwd, rot)
@@ -77,3 +79,6 @@ class DriveSubsystem(commands2.Subsystem):
         if isInverted == None: isInverted = not self.isInverted
         self.isInverted = isInverted
 
+    def flag(self, flagdata):
+        self.isFlagged = True
+        self.flagdata = flagdata

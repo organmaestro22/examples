@@ -7,7 +7,7 @@ class State(commands2.Subsystem):
 
         self.driveState = constants.kDefaultDriveState
         self.driveInvState = constants.kDefaultDriveInvState
-        self.speedState = constants.kDefaultSpeedState
+        self.halfSpeedState = constants.kDefaultHalfSpeedState
 
     def isDriveArcade(self):
         #print(self.driveState)
@@ -16,11 +16,15 @@ class State(commands2.Subsystem):
     def isDriveInverted(self):
         return self.driveInvState
     
-    def isDriveDifferentSpeed(self):
-        return self.speedState != 0
+    def isDriveHalfSpeed(self):
+        return self.halfSpeedState != 0
     
     def handleButton1(self):
         self.driveState = not self.driveState
 
     def handleButton2(self):
         self.driveInvState = not self.driveInvState
+    
+    def handleButton3(self, pressed):
+        if pressed: self.halfSpeedState = 1
+        else: self.halfSpeedState = 0

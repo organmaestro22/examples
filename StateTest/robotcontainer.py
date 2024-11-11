@@ -68,15 +68,19 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
-        # BUTTONS
+        # BUTTONS - Buttons trigger states or commands
         commands2.button.JoystickButton(self.driverController, 1).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton1()))
         commands2.button.JoystickButton(self.driverController, 2).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton2()))
+        commands2.button.JoystickButton(self.driverController, 3).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton3(True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton3(False)))
 
-        # STATES
+        # STATES - States trigger commands
+        # Invert the drivetrain direction
         commands2.button.Trigger(self.state.isDriveInverted).onTrue(
             commands2.cmd.runOnce(lambda: self.drive.invert())
+        ).onFalse(
+            commands2.cmd.runOnce(lambda: self.drive.invert())
         )
-        # set the drive command based on the drive state. This allows the drive to operate in multiple states
+        # Set the drive command based on the drive state. This allows the drive to operate in multiple states
         commands2.button.Trigger(self.state.isDriveArcade).whileTrue(
             DefaultDrive(
                 self.drive,
@@ -89,6 +93,7 @@ class RobotContainer:
                 lambda: self.driverController.getX(),
             ))
         
+        commands2.button.Trigger(self.state.isDriveHalfSpeed).whileTrue(HalveDriveSpeed(self.drive))
 
     def getAutonomousCommand(self) -> str:
         return self.chooser.getSelected()
