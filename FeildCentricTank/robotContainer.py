@@ -9,15 +9,14 @@ from wpilib.interfaces import GenericHID
 
 import commands2
 import commands2.button
+import navx
 
 import constants
 
-
-from commands.defaultdrive import DefaultDrive
-from commands.halvedrivespeed import HalveDriveSpeed
-
 from subsystems.driveSubsystem import DriveSubsystem
-
+from commands.driveCommand import Drive
+from commands.restZero import ResetZero
+from subsystems.turnPID import turnPID
 
 class RobotContainer:
     """
@@ -35,8 +34,13 @@ class RobotContainer:
         # The robot's subsystems
         self.drive = DriveSubsystem()
 
+        # Navx
+        self.navx = navx.AHRS.create_spi()
         # Chooser
         self.chooser = wpilib.SendableChooser()
+        self.turnPID = turnPID()
+        
+        # State
 
         # Add commands to the autonomous command chooser
         self.chooser.setDefaultOption("Simple Auto", 'A')
@@ -49,10 +53,12 @@ class RobotContainer:
 
         # set up default drive command
         self.drive.setDefaultCommand(
-            DefaultDrive(
+            Drive(
                 self.drive,
-                lambda: -self.driverController.getY(),
                 lambda: -self.driverController.getX(),
+                lambda: self.driverController.getY(),
+                lambda: self.driverController.getZ(),
+                self.navx
             )
         )
 
@@ -63,9 +69,7 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
 
-        commands2.button.JoystickButton(self.driverController, 3).onTrue(
-            HalveDriveSpeed(self.drive)
-        )
-
+        commands2.button.JoystickButton(self.driverController, 2).onTrue(ResetZero(self.navx))
+            
     def getAutonomousCommand(self) -> str:
         return self.chooser.getSelected()

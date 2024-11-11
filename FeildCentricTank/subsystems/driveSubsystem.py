@@ -15,6 +15,7 @@ import constants
 class DriveSubsystem(commands2.Subsystem):
     def __init__(self) -> None:
         super().__init__()
+
         if wpilib.RobotBase.isSimulation():
             self.left1 = wpilib.PWMVictorSPX(1)
             self.right1 = wpilib.PWMVictorSPX(3)
@@ -51,3 +52,6 @@ class DriveSubsystem(commands2.Subsystem):
         drive to drive more slowly.
         """
         self.drive.setMaxOutput(maxOutput)
+    
+    def stop(self):
+        self.drive.stopMotor()

@@ -15,8 +15,10 @@ import constants
 
 from commands.defaultdrive import DefaultDrive
 from commands.halvedrivespeed import HalveDriveSpeed
+from commands.curvatureDrive import CurvatureDrive
 
 from subsystems.driveSubsystem import DriveSubsystem
+from subsystems.state import State
 
 
 class RobotContainer:
@@ -34,6 +36,9 @@ class RobotContainer:
 
         # The robot's subsystems
         self.drive = DriveSubsystem()
+        
+        # State
+        self.state = State()
 
         # Chooser
         self.chooser = wpilib.SendableChooser()
@@ -52,9 +57,10 @@ class RobotContainer:
             DefaultDrive(
                 self.drive,
                 lambda: -self.driverController.getY(),
-                lambda: -self.driverController.getX(),
+                lambda: self.driverController.getX(),
             )
         )
+
 
     def configureButtonBindings(self):
         """
@@ -62,10 +68,27 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
+        # BUTTONS
+        commands2.button.JoystickButton(self.driverController, 1).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton1()))
+        commands2.button.JoystickButton(self.driverController, 2).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton2()))
 
-        commands2.button.JoystickButton(self.driverController, 3).onTrue(
-            HalveDriveSpeed(self.drive)
+        # STATES
+        commands2.button.Trigger(self.state.isDriveInverted).onTrue(
+            commands2.cmd.runOnce(lambda: self.drive.invert())
         )
+        # set the drive command based on the drive state. This allows the drive to operate in multiple states
+        commands2.button.Trigger(self.state.isDriveArcade).whileTrue(
+            DefaultDrive(
+                self.drive,
+                lambda: -self.driverController.getY(),
+                lambda: self.driverController.getX(),
+            )).whileFalse(
+                CurvatureDrive(
+                self.drive,
+                lambda: -self.driverController.getY(),
+                lambda: self.driverController.getX(),
+            ))
+        
 
     def getAutonomousCommand(self) -> str:
         return self.chooser.getSelected()

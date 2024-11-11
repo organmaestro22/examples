@@ -33,7 +33,7 @@ class DriveSubsystem(commands2.Subsystem):
                 wpilib.MotorControllerGroup(self.left1, self.left2),
                 wpilib.MotorControllerGroup(self.right1, self.right2),
             )
-        self.driveInverted = False
+        self.isInverted = False
         self.drive.setMaxOutput(.75)
 
     def arcadeDrive(self, fwd: float, rot: float) -> None:
@@ -43,7 +43,22 @@ class DriveSubsystem(commands2.Subsystem):
         :param fwd: the commanded forward movement
         :param rot: the commanded rotation
         """
+        print(self.isInverted)
+        if self.isInverted: fwd = -fwd # invert the direction of the throttle if in inverted mode
+
         self.drive.arcadeDrive(fwd, rot)
+
+    def curvatureDrive(self, fwd: float, rot: float) -> None:
+        """
+        Drive using Curvature Drive
+
+        Args:
+            fwd (float): Throttle
+            rot (float): Steering
+        """
+        if self.isInverted: fwd = -fwd # invert the direction of the throttle if in inverted mode
+
+        self.drive.curvatureDrive(fwd, rot, True)
 
     def setMaxOutput(self, maxOutput: float):
         """
@@ -51,3 +66,14 @@ class DriveSubsystem(commands2.Subsystem):
         drive to drive more slowly.
         """
         self.drive.setMaxOutput(maxOutput)
+    
+    def invert(self, isInverted: bool = None):
+        """
+        Invert the direction of the throttle
+
+        Args:
+            isInverted (bool): Whether or not the throttle is inverted
+        """
+        if isInverted == None: isInverted = not self.isInverted
+        self.isInverted = isInverted
+
