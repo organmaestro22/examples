@@ -56,8 +56,8 @@ class RobotContainer:
         self.drive.setDefaultCommand(
             DefaultDrive(
                 self.drive,
-                lambda: -self.driverController.getY(),
-                lambda: self.driverController.getX(),
+                lambda: self.driverController.getY(),
+                lambda: self.driverController.getZ(),
             )
         )
 
@@ -70,8 +70,8 @@ class RobotContainer:
         """
         # BUTTONS - Buttons trigger states or commands
         commands2.button.JoystickButton(self.driverController, 1).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton1()))
-        commands2.button.JoystickButton(self.driverController, 2).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton2()))
-        commands2.button.JoystickButton(self.driverController, 3).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton3(True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton3(False)))
+        commands2.button.JoystickButton(self.driverController, 3).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton2()))
+        commands2.button.JoystickButton(self.driverController, 2).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton3(True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton3(False)))
 
         # STATES - States trigger commands
         # Invert the drivetrain direction
@@ -84,13 +84,13 @@ class RobotContainer:
         commands2.button.Trigger(self.state.isDriveArcade).whileTrue(
             DefaultDrive(
                 self.drive,
-                lambda: -self.driverController.getY(),
-                lambda: self.driverController.getX(),
+                lambda: self.driverController.getY(),
+                lambda: self.driverController.getZ(),
             )).whileFalse(
                 CurvatureDrive(
                 self.drive,
                 lambda: -self.driverController.getY(),
-                lambda: self.driverController.getX(),
+                lambda: self.driverController.getZ(),
             ))
         
         commands2.button.Trigger(self.state.isDriveHalfSpeed).whileTrue(HalveDriveSpeed(self.drive))

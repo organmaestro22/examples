@@ -20,11 +20,14 @@ class State(commands2.Subsystem):
         return self.halfSpeedState != 0
     
     def handleButton1(self):
+        print("Button 1")
         self.driveState = not self.driveState
 
     def handleButton2(self):
+        print("Button 2")
         self.driveInvState = not self.driveInvState
     
     def handleButton3(self, pressed):
+        print("Button 3")
         if pressed: self.halfSpeedState = 1
         else: self.halfSpeedState = 0

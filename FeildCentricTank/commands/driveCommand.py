@@ -72,7 +72,7 @@ class Drive(commands2.Command):
         self.turnController.setI(self.getI.getFloat(constants.kI))
         self.turnController.setD(self.getD.getFloat(constants.kD))
 
-        if abs(self.right()) >= .02 or abs(self.forward()) >= .02:
+        if abs(self.right()) >= .2 or abs(self.forward()) >= .2:
             # print(self.getRotation(),self.getThrottle(),self.getSetpoint())
             self.drive.arcadeDrive(self.getThrottle(), self.getRotation())
 

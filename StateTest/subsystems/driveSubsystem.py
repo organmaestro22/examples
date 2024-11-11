@@ -27,11 +27,13 @@ class DriveSubsystem(commands2.Subsystem):
             self.left2 = ctre.WPI_VictorSPX(constants.kLeftMotor2ID)
             self.right1 = ctre.WPI_VictorSPX(constants.kRightMotor1ID)
             self.right2 = ctre.WPI_VictorSPX(constants.kRightMotor2ID)
-
+            self.left = wpilib.MotorControllerGroup(self.left1, self.left2)
+            self.right = wpilib.MotorControllerGroup(self.right1, self.right2)
+            self.left.setInverted(True)
             # The robot's drive
             self.drive = wpilib.drive.DifferentialDrive(
-                wpilib.MotorControllerGroup(self.left1, self.left2),
-                wpilib.MotorControllerGroup(self.right1, self.right2),
+                self.left,
+                self.right,
             )
         self.isInverted = False
         self.isFlagged = False
