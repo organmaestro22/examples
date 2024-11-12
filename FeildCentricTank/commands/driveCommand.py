@@ -12,9 +12,24 @@ import math
 import constants
 import wpimath
 from wpilib.shuffleboard import Shuffleboard
+import time
 
 def constrain(val, rmin, rmax):
     return min(rmax, max(val, rmin))
+
+def isPositve(num):
+    return abs(num) == num
+
+def getAsPositive(angle, minA = -180, maxA = 180):
+    return maxA + angle - minA
+
+def getAsNegative(angle, minA = -180, maxA = 180):
+    return minA + angle - maxA
+
+def getClosestAngle(current, setpoint, minA = -180, maxA = 180):
+    angle1 = (setpoint - getAsPositive(current)) if isPositve(setpoint) else (setpoint - getAsNegative(current))
+    angle2 = setpoint - current
+    return angle2 if abs(angle2) < abs(angle1) else angle1
 
 class Drive(commands2.Command):
     def __init__(
@@ -41,6 +56,10 @@ class Drive(commands2.Command):
             constants.kI,
             constants.kD,
         )
+        self.DC = 20 # degrees/s/s
+        self.lastTime = None
+        self.lastYaw = None
+
         self.tab = Shuffleboard.getTab("Turn PID")
         self.getP = self.tab.add("P", constants.kP).getEntry()
         self.getI = self.tab.add("I", constants.kI).getEntry()
@@ -62,7 +81,7 @@ class Drive(commands2.Command):
                 -self.right(), -self.forward()
                         ))*179.9/180
     
-    def getRotation(self):
+    def getRotation(self, setpoint):
         return self.turnController.calculate(
                 -self.navx.getYaw(), self.getSetpoint()
             )
@@ -71,10 +90,30 @@ class Drive(commands2.Command):
         self.turnController.setP(self.getP.getFloat(constants.kP))
         self.turnController.setI(self.getI.getFloat(constants.kI))
         self.turnController.setD(self.getD.getFloat(constants.kD))
+        
+        throttle = self.getThrottle()
+        setpoint = self.getSetpoint()
+        current = self.navx.getYaw()
 
+        # Calculate the robot's current rotoational speed
         if abs(self.right()) >= .2 or abs(self.forward()) >= .2:
+            distanceToSetpoint = getClosestAngle(current, setpoint)
+            if self.lastTime == None or self.lastYaw == None:
+                self.lastTime = time.time()
+                currentVelocity = 0
+            else:
+                currentVelocity = (current - self.lastYaw)/(time.time() - self.lastTime) # Degrees/s
+
+            # Calculate the distance the robot will continue to rotoate if the motor is off
+            coastTime = currentVelocity/self.DC
+            coastDistance = currentVelocity * coastTime / 2
+            
+            # Calculate how much further the robot needs to go at the current speed to reach the setpoint, accounting for coasting occuring
+            distanceToGo = distanceToSetpoint - coastDistance
+
+            rotation = self.turnController.calculate(distanceToGo, 0)
             # print(self.getRotation(),self.getThrottle(),self.getSetpoint())
-            self.drive.arcadeDrive(self.getThrottle(), self.getRotation())
+            self.drive.arcadeDrive(throttle, rotation)
 
         else: 
             self.drive.arcadeDrive(0, self.twist())

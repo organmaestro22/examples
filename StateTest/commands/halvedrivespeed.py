@@ -18,4 +18,4 @@ class HalveDriveSpeed(commands2.Command):
         self.drive.setMaxOutput(0.5)
 
     def end(self, interrupted: bool) -> None:
-        self.drive.setMaxOutput(1.0)
+        self.drive.setMaxOutput(.75)

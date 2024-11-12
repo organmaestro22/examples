@@ -56,7 +56,7 @@ class RobotContainer:
         self.drive.setDefaultCommand(
             DefaultDrive(
                 self.drive,
-                lambda: self.driverController.getY(),
+                lambda: -self.driverController.getY(),
                 lambda: self.driverController.getZ(),
             )
         )
@@ -69,9 +69,9 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
         # BUTTONS - Buttons trigger states or commands
-        commands2.button.JoystickButton(self.driverController, 1).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton1()))
-        commands2.button.JoystickButton(self.driverController, 3).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton2()))
-        commands2.button.JoystickButton(self.driverController, 2).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton3(True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton3(False)))
+        commands2.button.JoystickButton(self.driverController, 1).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton('a', True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton('a', False)))
+        commands2.button.JoystickButton(self.driverController, 2).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton('b', True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton('b', False)))
+        commands2.button.JoystickButton(self.driverController, 3).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton('c', True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton('c', False)))
 
         # STATES - States trigger commands
         # Invert the drivetrain direction
@@ -84,7 +84,7 @@ class RobotContainer:
         commands2.button.Trigger(self.state.isDriveArcade).whileTrue(
             DefaultDrive(
                 self.drive,
-                lambda: self.driverController.getY(),
+                lambda: -self.driverController.getY(),
                 lambda: self.driverController.getZ(),
             )).whileFalse(
                 CurvatureDrive(

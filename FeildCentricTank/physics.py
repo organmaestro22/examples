@@ -34,7 +34,7 @@ class PhysicsEngine:
         # fmt: off
         self.drivetrain = tankmodel.TankModel.theory(
             motor_cfgs.MOTOR_CFG_CIM,           # motor configuration
-            1 * units.lbs,                    # robot mass
+            100 * units.lbs,                    # robot mass
             10.71,                              # drivetrain gear ratio
             1,                                  # motors per side
             22 * units.inch,                    # robot wheelbase
