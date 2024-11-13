@@ -10,7 +10,7 @@
 #
 
 # States
-kDefaultDriveState = True
+kDefaultDriveState = 1
 kDefaultHalfSpeedState = 0
 kDefaultDriveInvState = 0
 

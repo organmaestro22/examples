@@ -1,4 +1,4 @@
-buttonsToMap = ["a", "b", "c"]
+buttonsToMap = ["a", "b", "c","b"]
 output = ""
 for name in buttonsToMap:
     button = input(f"Button to map to {name}")

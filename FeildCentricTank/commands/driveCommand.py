@@ -109,8 +109,8 @@ class Drive(commands2.Command):
             coastDistance = currentVelocity * coastTime / 2
             
             # Calculate how much further the robot needs to go at the current speed to reach the setpoint, accounting for coasting occuring
-            distanceToGo = distanceToSetpoint - coastDistance
-
+            distanceToGo = round(distanceToSetpoint - coastDistance)
+            print(distanceToGo)
             rotation = self.turnController.calculate(distanceToGo, 0)
             # print(self.getRotation(),self.getThrottle(),self.getSetpoint())
             self.drive.arcadeDrive(throttle, rotation)

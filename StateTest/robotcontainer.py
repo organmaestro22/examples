@@ -20,7 +20,6 @@ from commands.curvatureDrive import CurvatureDrive
 from subsystems.driveSubsystem import DriveSubsystem
 from subsystems.state import State
 
-
 class RobotContainer:
     """
     This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -61,6 +60,9 @@ class RobotContainer:
             )
         )
 
+    def mapButton(self, button, stateTrigger):
+        commands2.button.JoystickButton(self.driverController, button).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton(stateTrigger, True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton(stateTrigger), False)))
+
 
     def configureButtonBindings(self):
         """
@@ -69,10 +71,10 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
         # BUTTONS - Buttons trigger states or commands
-        commands2.button.JoystickButton(self.driverController, 1).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton('a', True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton('a', False)))
-        commands2.button.JoystickButton(self.driverController, 2).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton('b', True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton('b', False)))
-        commands2.button.JoystickButton(self.driverController, 3).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton('c', True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton('c', False)))
-
+        self.mapButton(1, 'a')
+        self.mapButton(2, 'b')
+        self.mapButton(3, 'c')
+        
         # STATES - States trigger commands
         # Invert the drivetrain direction
         commands2.button.Trigger(self.state.isDriveInverted).onTrue(
