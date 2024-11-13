@@ -60,9 +60,8 @@ class RobotContainer:
             )
         )
 
-    def mapButton(self, button, stateTrigger):
-        commands2.button.JoystickButton(self.driverController, button).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton(stateTrigger, True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton(stateTrigger), False)))
-
+    def mapButton(self, button, stateTrigger): # Maps a physical button to trigger a state change
+        commands2.button.JoystickButton(self.driverController, button).onTrue(commands2.cmd.runOnce(lambda: self.state.handleButton(stateTrigger, True))).onFalse(commands2.cmd.runOnce(lambda: self.state.handleButton(stateTrigger, False)))
 
     def configureButtonBindings(self):
         """
@@ -74,7 +73,7 @@ class RobotContainer:
         self.mapButton(1, 'a')
         self.mapButton(2, 'b')
         self.mapButton(3, 'c')
-        
+
         # STATES - States trigger commands
         # Invert the drivetrain direction
         commands2.button.Trigger(self.state.isDriveInverted).onTrue(

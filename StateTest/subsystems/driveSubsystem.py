@@ -59,7 +59,7 @@ class DriveSubsystem(commands2.Subsystem):
         Args:
             fwd (float): Throttle
             rot (float): Steering
-        """
+            """
         if self.isInverted: fwd = -fwd # invert the direction of the throttle if in inverted mode
 
         self.drive.curvatureDrive(fwd, rot, True)
